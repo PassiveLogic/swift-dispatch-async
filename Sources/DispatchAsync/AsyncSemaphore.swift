@@ -17,7 +17,7 @@
 @available(macOS 10.15, *)
 actor AsyncSemaphore {
     private var value: Int
-    private var waiters: Array<CheckedContinuation<Void, Never>> = []
+    private var waiters: [CheckedContinuation<Void, Never>] = []
 
     init(value: Int = 1) {
         self.value = value

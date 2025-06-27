@@ -46,7 +46,7 @@ public enum DispatchTimeInterval: Equatable, Sendable {
         }
     }
 
-    public static func ==(lhs: DispatchTimeInterval, rhs: DispatchTimeInterval) -> Bool {
+    public static func == (lhs: DispatchTimeInterval, rhs: DispatchTimeInterval) -> Bool {
         switch (lhs, rhs) {
         case (.never, .never): return true
         case (.never, _): return false

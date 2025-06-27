@@ -12,6 +12,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-package let kNanosecondsPerSecond:  UInt64 = 1_000_000_000
+package let kNanosecondsPerSecond: UInt64 = 1_000_000_000
 package let kNanosecondsPerMillisecond: UInt64 = 1_000_000
 package let kNanoSecondsPerMicrosecond: UInt64 = 1_000

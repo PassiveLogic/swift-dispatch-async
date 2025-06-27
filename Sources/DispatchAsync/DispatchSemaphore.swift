@@ -37,9 +37,9 @@
 /// Swift Concurrency api's with a safe async wait function.
 @available(
     *,
-     deprecated,
-     renamed: "AsyncSemaphore",
-     message: "DispatchSemaphore.wait is dangerous because of it's thread-blocking nature. Use AsyncSemaphore and Swift Concurrency instead."
+    deprecated,
+    renamed: "AsyncSemaphore",
+    message: "DispatchSemaphore.wait is dangerous because of it's thread-blocking nature. Use AsyncSemaphore and Swift Concurrency instead."
 )
 @available(macOS 10.15, *)
 public class DispatchSemaphore: @unchecked Sendable {

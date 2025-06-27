@@ -13,6 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import DispatchAsync
 
 @Test
@@ -112,12 +113,10 @@ func dispatchGroupOrderCleanliness() async throws {
             // print(finalValue)
 
             #expect(finalValue.prefix(1) == "|")
-            #expect(finalValue.count { $0 == "🟣"} == 3)
-            #expect(finalValue.count { $0 == "🟢"} == 1)
+            #expect(finalValue.count { $0 == "🟣" } == 3)
+            #expect(finalValue.count { $0 == "🟢" } == 1)
             #expect(finalValue.lastIndex(of: "🟣")! < finalValue.firstIndex(of: "🟢")!)
             #expect(finalValue.suffix(1) == "=")
         }
     }
 }
-
-

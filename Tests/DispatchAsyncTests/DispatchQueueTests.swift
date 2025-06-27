@@ -13,6 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import DispatchAsync
 
 #if !os(WASI)

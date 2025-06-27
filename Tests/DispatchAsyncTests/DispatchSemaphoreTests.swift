@@ -13,6 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import DispatchAsync
 
 nonisolated(unsafe) private var sharedPoolCompletionCount = 0
