@@ -27,7 +27,7 @@ Ideally, with either approach, this repository would transfer ownership to the s
 
 The current implementation of `DispatchSemaphore` has some limitations. Blocking threads goes against the design goals of Swift Concurrency.
 The `wait` function on `DispatchSemaphore` goes against this goal. Furthermore, most wasm targets run on a single thread from the web
-browser, so any time the `wait` function ends up blocking the calling thread, it would almost certainly hang a single-threaded wasm
+browser, so any time the `wait` function ends up blocking the calling thread, it would almost certainly freeze the single-threaded wasm
 executable.
 
 To navigate these issues, there are some limitations:
