@@ -1,5 +1,5 @@
 #!/bin/bash
-##===----------------------------------------------------------------------===//
+##===----------------------------------------------------------------------===##
 ##
 ## This source file is part of the Swift.org open source project
 ##
@@ -11,7 +11,7 @@
 ##
 ## SPDX-License-Identifier: Apache-2.0
 ##
-##===----------------------------------------------------------------------===//
+##===----------------------------------------------------------------------===##
 
 # TODO: Remove this file once there is a valid reference available in github from
 # this PR: https://github.com/apple/swift-nio/pull/3159
