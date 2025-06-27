@@ -12,8 +12,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// swiftlint:disable identifier_name
-package let NSEC_PER_SEC:  UInt64 = 1_000_000_000
-package let NSEC_PER_MSEC: UInt64 = 1_000_000
-package let NSEC_PER_USEC: UInt64 = 1_000
-// swiftlint:enable identifier_name
+package let kNanosecondsPerSecond:  UInt64 = 1_000_000_000
+package let kNanosecondsPerMillisecond: UInt64 = 1_000_000
+package let kNanoSecondsPerMicrosecond: UInt64 = 1_000

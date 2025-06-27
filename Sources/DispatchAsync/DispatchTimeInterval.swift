@@ -38,9 +38,9 @@ public enum DispatchTimeInterval: Equatable, Sendable {
 
     internal var rawValue: Int64 {
         switch self {
-        case .seconds(let s): return clampedInt64Product(Int64(s), Int64(NSEC_PER_SEC))
-        case .milliseconds(let ms): return clampedInt64Product(Int64(ms), Int64(NSEC_PER_MSEC))
-        case .microseconds(let us): return clampedInt64Product(Int64(us), Int64(NSEC_PER_USEC))
+        case .seconds(let s): return clampedInt64Product(Int64(s), Int64(kNanosecondsPerSecond))
+        case .milliseconds(let ms): return clampedInt64Product(Int64(ms), Int64(kNanosecondsPerMillisecond))
+        case .microseconds(let us): return clampedInt64Product(Int64(us), Int64(kNanoSecondsPerMicrosecond))
         case .nanoseconds(let ns): return Int64(ns)
         case .never: return Int64.max
         }
