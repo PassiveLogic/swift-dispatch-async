@@ -28,7 +28,7 @@ func testBasicDispatchQueueMain() async throws {
             // On linux platforms, there is no guarantee that the main queue is on the main thread,
             // only that it is on the main actor.
 
-            #if os(LINUX)
+            #if os(Linux)
             #expect(DispatchQueue.isMain)
             #elseif !os(WASI)
             #expect(Thread.isMainThread) // NOTE: Thread API's aren't currently available on OS(WASI), as of June 2025
