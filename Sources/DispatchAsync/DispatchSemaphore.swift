@@ -71,4 +71,4 @@ public class DispatchSemaphore: @unchecked Sendable {
 @available(macOS 10.15, *)
 typealias DispatchSemaphore = AsyncSemaphore
 
-#endif // #if os(WASI)
+#endif  // #if os(WASI)
