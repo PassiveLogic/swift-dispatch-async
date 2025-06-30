@@ -13,4 +13,8 @@
 ##
 ##===----------------------------------------------------------------------===##
 
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 git ls-files -z '*.swift' | xargs -0 swift format format --parallel --in-place
