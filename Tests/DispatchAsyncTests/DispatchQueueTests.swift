@@ -31,7 +31,8 @@ func testBasicDispatchQueueMain() async throws {
             #if os(Linux)
             #expect(DispatchQueue.isMain)
             #elseif !os(WASI)
-            #expect(Thread.isMainThread) // NOTE: Thread API's aren't currently available on OS(WASI), as of June 2025
+            // NOTE: Thread API's aren't currently available on OS(WASI), as of June 2025
+            #expect(Thread.isMainThread)
             #endif
             continuation.resume(returning: true)
         }
