@@ -24,9 +24,14 @@ import class Foundation.Thread
 func testBasicDispatchQueueMain() async throws {
     let asyncValue = await withCheckedContinuation { continuation in
         DispatchQueue.main.async {
-            // Main queue should be on main thread.
-            #if !os(WASI)
-            #expect(Thread.isMainThread)
+            // Main queue should be on main thread on apple platforms.
+            // On linux platforms, there is no guarantee that the main queue is on the main thread,
+            // only that it is on the main actor.
+
+            #if os(LINUX)
+            #expect(DispatchQueue.isMain)
+            #elseif !os(WASI)
+            #expect(Thread.isMainThread) // NOTE: Thread API's aren't currently available on OS(WASI), as of June 2025
             #endif
             continuation.resume(returning: true)
         }
