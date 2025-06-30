@@ -24,7 +24,7 @@ jobs:
     name: WebAssembly SDK
     runs-on: ubuntu-latest
     container:
-      image: "swift:6.1-noble"
+      image: "swift:6.1.0-noble"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
