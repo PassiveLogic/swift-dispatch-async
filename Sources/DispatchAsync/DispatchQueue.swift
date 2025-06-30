@@ -72,7 +72,7 @@ public class DispatchQueue: @unchecked Sendable {
         } else {
             if isMain {
                 Task { @MainActor [work] in
-                    DispatchQueue.$isMain.withValue(true) {
+                    DispatchQueue.$isMain.withValue(true) { @MainActor [work] in
                         work()
                     }
                 }
