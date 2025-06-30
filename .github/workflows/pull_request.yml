@@ -27,7 +27,11 @@ jobs:
       image: "swift:6.0-noble"
     steps:
       - name: WasmBuild
-      # TODO: Update this to use swift-nio once https://github.com/apple/swift-nio/pull/3159/ is merged
+        # TODO: Update this to use swift-nio once https://github.com/apple/swift-nio/pull/3159/ is merged
         run: |
-          apt-get update -y -q && apt-get install -y -q curl && $workspace/scripts/install_wasm_sdk.sh
+          apt-get update -y -q
+          apt-get install -y -q curl
+          version="$(swift --version | head -n1)"
+          tag="$(curl -sL "https://raw.githubusercontent.com/swiftwasm/swift-sdk-index/refs/heads/main/v1/tag-by-version.json" | jq -e -r --arg v "$version" '.[$v] | .[-1]')"
+          curl -sL "https://raw.githubusercontent.com/swiftwasm/swift-sdk-index/refs/heads/main/v1/builds/$tag.json" | jq -r '.["swift-sdks"]["wasm32-unknown-wasi"] | "swift sdk install \"\(.url)\" --checksum \"\(.checksum)\""' | sh -x
           swift build --swift-sdk wasm32-unknown-wasi
