@@ -22,6 +22,12 @@ jobs:
 
   wasm-sdk:
     name: WebAssembly SDK
-    # TODO: Switch to this line after https://github.com/apple/swift-nio/pull/3159/ is merged
-    # uses: apple/swift-nio/.github/workflows/wasm_sdk.yml@main
-    uses: kateinoigakukun/swift-nio/.github/workflows/wasm_sdk.yml@katei/add-wasm-ci
+    runs-on: ubuntu-latest
+    container:
+      image: "swift:6.0-noble"
+    steps:
+      - name: WasmBuild
+      # TODO: Update this to use swift-nio once https://github.com/apple/swift-nio/pull/3159/ is merged
+        run: |
+          apt-get update -y -q && apt-get install -y -q curl && $workspace/scripts/install_wasm_sdk.sh
+          swift build --swift-sdk wasm32-unknown-wasi
