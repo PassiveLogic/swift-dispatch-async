@@ -26,6 +26,10 @@ jobs:
     container:
       image: "swift:6.0-noble"
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
       - name: WasmBuild
         # TODO: Update this to use swift-nio once https://github.com/apple/swift-nio/pull/3159/ is merged
         run: |
