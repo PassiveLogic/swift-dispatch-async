@@ -59,7 +59,8 @@ public class DispatchSemaphore: @unchecked Sendable {
     public func wait() {
         // NOTE: wasm is currently mostly single threaded.
         // And we don't have a Thread.sleep API yet.
-        // So
+        // So assert that we're on the main actor here. Usage from other
+        // actors is not currently supported.
         MainActor.assertIsolated()
         assert(value > 0, "DispatchSemaphore is currently only designed for single-threaded use.")
         value -= 1
