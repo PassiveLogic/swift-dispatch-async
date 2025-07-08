@@ -23,16 +23,25 @@
 public class DispatchQueue: @unchecked Sendable {
     public static let main = DispatchQueue(isMain: true)
 
-    private static let _global = DispatchQueue()
+    private static let _global = DispatchQueue(attributes: .concurrent)
     public static func global() -> DispatchQueue {
         Self._global
     }
 
     public enum Attributes {
         case concurrent
+
+        fileprivate var isConcurrent: Bool {
+            switch self {
+            case .concurrent:
+                return true
+            }
+        }
     }
 
     private let targetQueue: DispatchQueue?
+
+    private let serialQueue = FIFOQueue()
 
     /// Indicates whether calling context is running from the main DispatchQueue instance, or some other DispatchQueue instance.
     @TaskLocal public static var isMain = false
@@ -56,6 +65,10 @@ public class DispatchQueue: @unchecked Sendable {
         attributes: DispatchQueue.Attributes? = nil,
         target: DispatchQueue? = nil
     ) {
+        if isMain, attributes == .concurrent {
+            assertionFailure("Should never create a concurrent main queue. Main queue should always be serial.")
+        }
+
         self.isMain = isMain
         self.label = label
         self.attributes = attributes
@@ -77,10 +90,60 @@ public class DispatchQueue: @unchecked Sendable {
                     }
                 }
             } else {
-                Task {
-                    work()
+                if attributes?.isConcurrent == true {
+                    Task { // FIFO is not important for concurrent queues, using global task executor here
+                        work()
+                    }
+                } else {
+                    // We don't need to use a task for enqueing work to a non-main serial queue
+                    // because the enqueue process is very light-weight, and it is important to
+                    // preserve FIFO entry into the queue as much as possible.
+                    serialQueue.enqueue(work)
                 }
             }
         }
+    }
+}
+
+/// A tiny FIFO job runner that executes each submitted async closure
+/// strictly in the order it was enqueued.
+///
+/// This is NOT part of the original GCD API. So it is intentionally kept
+/// internal for now.
+@available(macOS 10.15, *)
+actor FIFOQueue {
+    /// A single item in the stream, which is a block of work that can be completed.
+    typealias WorkItem = @Sendable () async -> Void
+
+    /// The stream’s continuation; lives inside the actor so nobody
+    /// else can yield into it.
+    private let continuation: AsyncStream<WorkItem>.Continuation
+
+    /// Spin up the stream and the single draining task.
+    init(bufferingPolicy: AsyncStream<WorkItem>.Continuation.BufferingPolicy = .unbounded) {
+        let stream: AsyncStream<WorkItem>
+        (stream, self.continuation) = AsyncStream.makeStream(of: WorkItem.self, bufferingPolicy: bufferingPolicy)
+
+        // Dedicated worker that processes work items one-by-one.
+        Task {
+            for await work in stream {
+                // Run each job in order, allowing suspension, and awaiting full
+                // completion, before running the next work item
+                await work()
+            }
+        }
+    }
+
+    /// Enqueue a new unit of work.
+    @discardableResult
+    nonisolated
+    func enqueue(_ workItem: @escaping WorkItem) -> AsyncStream<WorkItem>.Continuation.YieldResult {
+        // Never suspends, preserves order
+        continuation.yield(workItem)
+    }
+
+    deinit {
+        // Clean shutdown on deinit
+        continuation.finish()
     }
 }

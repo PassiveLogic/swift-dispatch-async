@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// Provides a semaphore implantation in `async` context, with a safe wait method. Provides easy safer replacement
+/// Provides a semaphore implantation in `async` context, with a safe wait method. Provides easy safe replacement
 /// for DispatchSemaphore usage.
 @available(macOS 10.15, *)
 actor AsyncSemaphore {
@@ -25,6 +25,7 @@ actor AsyncSemaphore {
 
     func wait() async {
         value -= 1
+
         if value >= 0 { return }
         await withCheckedContinuation {
             waiters.append($0)

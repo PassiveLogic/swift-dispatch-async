@@ -23,34 +23,29 @@
 /// for more details,
 @available(macOS 10.15, *)
 public class DispatchGroup: @unchecked Sendable {
-    /// Used to ensure FIFO access to the enter and leave calls
-    @globalActor
-    private actor DispatchGroupEntryActor: GlobalActor {
-        static let shared = DispatchGroupEntryActor()
-    }
-
-    private let group = AsyncGroup()
+    private let group = _AsyncGroup()
+    private let queue = FIFOQueue()
 
     public func enter() {
-        Task { @DispatchGroupEntryActor [] in
-            // ^--- Ensures serial FIFO entrance/exit into the group
+        queue.enqueue { [weak self] in
+            guard let self else { return }
             await group.enter()
         }
     }
 
     public func leave() {
-        Task { @DispatchGroupEntryActor [] in
-            // ^--- Ensures serial FIFO entrance/exit into the group
+        queue.enqueue { [weak self] in
+            guard let self else { return }
             await group.leave()
         }
     }
 
-    public func notify(queue: DispatchQueue, execute work: @escaping @Sendable @convention(block) () -> Void) {
-        Task { @DispatchGroupEntryActor [] in
-            // ^--- Ensures serial FIFO entrance/exit into the group
+    public func notify(queue notificationQueue: DispatchQueue, execute work: @escaping @Sendable @convention(block) () -> Void) {
+        queue.enqueue { [weak self] in
+            guard let self else { return }
             await group.notify {
                 await withCheckedContinuation { continuation in
-                    queue.async {
+                    notificationQueue.async {
                         work()
                         continuation.resume()
                     }
@@ -60,7 +55,22 @@ public class DispatchGroup: @unchecked Sendable {
     }
 
     func wait() async {
-        await group.wait()
+        await withCheckedContinuation { continuation in
+            queue.enqueue { [weak self] in
+                guard let self else { return }
+                // NOTE: We use a task for the wait, because
+                // otherwise the queue won't execute any more
+                // tasks until the wait finishes, which is not the
+                // behavior we want here. We want to enqueue the wait
+                // in FIFO call order, but then we want to allow the wait
+                // to be non-blocking for the queue until the last leave
+                // is called on the group.
+                Task {
+                    await group.wait()
+                    continuation.resume()
+                }
+            }
+        }
     }
 
     public init() {}
@@ -69,10 +79,8 @@ public class DispatchGroup: @unchecked Sendable {
 // MARK: - Private Interface for Async Usage -
 
 @available(macOS 10.15, *)
-fileprivate actor AsyncGroup {
+fileprivate actor _AsyncGroup {
     private var taskCount = 0
-    private var continuation: CheckedContinuation<Void, Never>?
-    private var isWaiting = false
     private var notifyHandlers: [@Sendable () async -> Void] = []
 
     func enter() {
@@ -100,30 +108,22 @@ fileprivate actor AsyncGroup {
             return
         }
 
-        isWaiting = true
-
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            self.continuation = continuation
+            notify {
+                continuation.resume()
+            }
             checkCompletion()
         }
     }
 
     private func checkCompletion() {
-        if taskCount <= 0 {
-            if isWaiting {
-                continuation?.resume()
-                continuation = nil
-                isWaiting = false
-            }
+        if taskCount <= 0, !notifyHandlers.isEmpty {
+            let handlers = notifyHandlers
+            notifyHandlers.removeAll()
 
-            if !notifyHandlers.isEmpty {
-                let handlers = notifyHandlers
-                notifyHandlers.removeAll()
-
-                for handler in handlers {
-                    Task {
-                        await handler()
-                    }
+            for handler in handlers {
+                Task {
+                    await handler()
                 }
             }
         }

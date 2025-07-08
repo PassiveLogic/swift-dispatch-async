@@ -13,30 +13,39 @@
 //===----------------------------------------------------------------------===//
 
 @available(macOS 13, *)
-public typealias DispatchTime = ContinuousClock.Instant
+public struct DispatchTime {
+    private let instant: ContinuousClock.Instant
 
-/// The very first time someone tries to reference a `uptimeNanoseconds` or a similar
-/// function that references a beginning point, this variable will be initialized as a beginning
-/// reference point. This guarantees that all calls to `uptimeNanoseconds` or similar
-/// will be 0 or greater.
-///
-/// By design, it is not possible to related `ContinuousClock.Instant` to
-/// `ProcessInfo.processInfo.systemUptime`, and even if one devised such
-/// a mechanism, it would open the door for fingerprinting. It's best to let the concept
-/// of uptime be relative to previous uptime calls.
-@available(macOS 13, *)
-private let uptimeBeginning: DispatchTime = DispatchTime.now()
+    /// The very first time someone intializes a DispatchTime instance, we
+    /// reference this static let, causing it to be initialized.
+    ///
+    /// This is the closest we can get to snapshotting the start time of the running
+    /// executable, without using OS-specific calls. We want
+    /// to avoid OS-specific calls to maximize portability.
+    ///
+    /// To keep this robust, we initialize `self.durationSinceBeginning`
+    /// to this value using a default value, which is guaranteed to run before any
+    /// initializers run. This guarantees that uptimeBeginning will be the very
+    /// first
+    @available(macOS 13, *)
+    private static let uptimeBeginning: ContinuousClock.Instant = ContinuousClock.Instant.now
 
-@available(macOS 13, *)
-extension DispatchTime {
+    /// See documentation for ``uptimeBeginning``. We intentionally
+    /// use this to guarantee a capture of `now` to uptimeBeginnin BEFORE
+    /// any DispatchTime instances are initialized.
+    private let durationSinceUptime = uptimeBeginning.duration(to: ContinuousClock.Instant.now)
+
+    public init() {
+        self.instant = ContinuousClock.Instant.now
+    }
+
     public static func now() -> DispatchTime {
-        now
+        DispatchTime()
     }
 
     public var uptimeNanoseconds: UInt64 {
-        let beginning = uptimeBeginning
-        let rightNow = DispatchTime.now()
-        let uptimeDuration: Int64 = beginning.duration(to: rightNow).nanosecondsClamped
+        let beginning = DispatchTime.uptimeBeginning
+        let uptimeDuration: Int64 = beginning.duration(to: self.instant).nanosecondsClamped
         guard uptimeDuration >= 0 else {
             assertionFailure("It shouldn't be possible to get a negative duration since uptimeBeginning.")
             return 0
