@@ -26,6 +26,7 @@ private typealias DispatchSemaphore = AsyncSemaphore
 nonisolated(unsafe) private var sharedPoolCompletionCount = 0
 
 @Test func basicAsyncSemaphoreTest() async throws {
+    sharedPoolCompletionCount = 0 // Reset to 0 for each test run
     let totalConcurrentPools = 10
 
     let semaphore = DispatchSemaphore(value: 1)
