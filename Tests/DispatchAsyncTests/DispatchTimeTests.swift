@@ -23,5 +23,17 @@ private typealias DispatchTime = DispatchAsync.DispatchTime
 func testDispatchTimeContinousClockBasics() async throws {
     let a = DispatchTime.now().uptimeNanoseconds
     let b = DispatchTime.now().uptimeNanoseconds
-    #expect(a <= b)
+    try await Task.sleep(for: .nanoseconds(1))
+    let c = DispatchTime.now().uptimeNanoseconds
+    #expect(a < b)
+    #expect(b < c)
+}
+
+@Test
+func testUptimeNanosecondsEqualityForConsecutiveCalls() async throws {
+    let original = DispatchTime.now()
+    let a = original.uptimeNanoseconds
+    try await Task.sleep(for: .nanoseconds(100))
+    let b = original.uptimeNanoseconds
+    #expect(a == b)
 }
