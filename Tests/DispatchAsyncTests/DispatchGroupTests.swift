@@ -104,14 +104,14 @@ struct DispatchGroupTests {
                 /// But the following would not be valid:
                 ///
                 /// ```
-                /// // BAD!
+                /// // BAD! (43 comes before 42)
                 /// |🔵43🟣/🟣^🟣\🟢43=
                 /// |🔵42🟣/🟣^🟣\🟢42=
                 /// |🔵44🟣/🟣^🟣\🟢44=
                 /// ```
                 ///
                 /// ```
-                /// // BAD!
+                /// // BAD! (green globe comes before a purle one)
                 /// |🔵42🟣/🟣^🟢42🟣\=
                 /// ```
                 ///
