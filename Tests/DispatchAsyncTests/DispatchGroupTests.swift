@@ -133,6 +133,9 @@ struct DispatchGroupTests {
     }
 
     /// Swift port of libdispatch/tests/dispatch_group.c
+    ///
+    /// See https://github.com/swiftlang/swift-corelibs-libdispatch/blob/686475721aca13d98d2eab3a0c439403d33b6e2d/tests/dispatch_group.c
+    ///
     /// The original C test stresses `dispatch_group_wait` by enqueuing a bunch of
     /// math-heavy blocks on a global queue, then waiting for them to finish with a
     /// timeout.  It also verifies that `notify` is invoked exactly once.
