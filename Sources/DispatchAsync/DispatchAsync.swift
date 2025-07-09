@@ -12,6 +12,15 @@
 //
 //===----------------------------------------------------------------------===//
 
-package let kNanosecondsPerSecond: UInt64 = 1_000_000_000
-package let kNanosecondsPerMillisecond: UInt64 = 1_000_000
-package let kNanoSecondsPerMicrosecond: UInt64 = 1_000
+/// Top level namespace for functionality provided in DispatchAsync.
+///
+/// Used to avoid namespacing conflicts with `Dispatch` and `Foundation`
+///
+/// Platforms other than WASI shouldn't consume this library for now
+/// except for testing and development purposes.
+///
+/// TODO: SM: Add github permalink to this, after it is merged.
+#if !os(WASI)
+@_spi(DispatchAsync)
+#endif
+public enum DispatchAsync {}

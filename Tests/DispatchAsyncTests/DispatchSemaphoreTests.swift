@@ -12,13 +12,20 @@
 //
 //===----------------------------------------------------------------------===//
 
+// TODO: SM: Rename this file to AsyncSemaphoreTests (coming in next PR that adds tests)
+
 import Testing
 
 @testable import DispatchAsync
 
+// NOTE: AsyncSempahore is nearly API-compatible with DispatchSemaphore,
+// This typealias helps demonstrate that fact.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+private typealias DispatchSemaphore = AsyncSemaphore
+
 nonisolated(unsafe) private var sharedPoolCompletionCount = 0
 
-@Test func basicDispatchSemaphoreTest() async throws {
+@Test func basicAsyncSemaphoreTest() async throws {
     let totalConcurrentPools = 10
 
     let semaphore = DispatchSemaphore(value: 1)

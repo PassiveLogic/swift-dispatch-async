@@ -14,7 +14,9 @@
 
 import Testing
 
-@testable import DispatchAsync
+@_spi(DispatchAsync) import DispatchAsync
+
+private typealias DispatchGroup = DispatchAsync.DispatchGroup
 
 @Test
 func dispatchGroupOrderCleanliness() async throws {

@@ -12,45 +12,61 @@
 //
 //===----------------------------------------------------------------------===//
 
-@available(macOS 13, *)
-public struct DispatchTime {
-    private let instant: ContinuousClock.Instant
+// NOTE: The following typealias mirrors Dispatch API's, but only for
+// specific compilation conditions where Dispatch is not available.
+// It is designed to safely elide away if and when Dispatch is introduced
+// in the required Dispatch support becomes available.
+#if os(WASI) && !canImport(Dispatch)
+/// Drop-in replacement for ``Dispatch.DispatchTime``, implemented using pure swift.
+@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
+public typealias DispatchTime = DispatchAsync.DispatchTime
+#endif
 
-    /// The very first time someone intializes a DispatchTime instance, we
-    /// reference this static let, causing it to be initialized.
-    ///
-    /// This is the closest we can get to snapshotting the start time of the running
-    /// executable, without using OS-specific calls. We want
-    /// to avoid OS-specific calls to maximize portability.
-    ///
-    /// To keep this robust, we initialize `self.durationSinceBeginning`
-    /// to this value using a default value, which is guaranteed to run before any
-    /// initializers run. This guarantees that uptimeBeginning will be the very
-    /// first
-    @available(macOS 13, *)
-    private static let uptimeBeginning: ContinuousClock.Instant = ContinuousClock.Instant.now
+extension DispatchAsync {
+    /// Drop-in replacement for ``Dispatch.DispatchTime``, implemented using pure swift.
+    #if !os(WASI)
+    @_spi(DispatchAsync)
+    #endif
+    @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
+    public struct DispatchTime {
+        private let instant: ContinuousClock.Instant
 
-    /// See documentation for ``uptimeBeginning``. We intentionally
-    /// use this to guarantee a capture of `now` to uptimeBeginnin BEFORE
-    /// any DispatchTime instances are initialized.
-    private let durationSinceUptime = uptimeBeginning.duration(to: ContinuousClock.Instant.now)
+        /// The very first time someone intializes a DispatchTime instance, we
+        /// reference this static let, causing it to be initialized.
+        ///
+        /// This is the closest we can get to snapshotting the start time of the running
+        /// executable, without using OS-specific calls. We want
+        /// to avoid OS-specific calls to maximize portability.
+        ///
+        /// To keep this robust, we initialize `self.durationSinceBeginning`
+        /// to this value using a default value, which is guaranteed to run before any
+        /// initializers run. This guarantees that uptimeBeginning will be the very
+        /// first
+        @available(macOS 13, *)
+        private static let uptimeBeginning: ContinuousClock.Instant = ContinuousClock.Instant.now
 
-    public init() {
-        self.instant = ContinuousClock.Instant.now
-    }
+        /// See documentation for ``uptimeBeginning``. We intentionally
+        /// use this to guarantee a capture of `now` to uptimeBeginnin BEFORE
+        /// any DispatchTime instances are initialized.
+        private let durationSinceUptime = uptimeBeginning.duration(to: ContinuousClock.Instant.now)
 
-    public static func now() -> DispatchTime {
-        DispatchTime()
-    }
-
-    public var uptimeNanoseconds: UInt64 {
-        let beginning = DispatchTime.uptimeBeginning
-        let uptimeDuration: Int64 = beginning.duration(to: self.instant).nanosecondsClamped
-        guard uptimeDuration >= 0 else {
-            assertionFailure("It shouldn't be possible to get a negative duration since uptimeBeginning.")
-            return 0
+        public init() {
+            self.instant = ContinuousClock.Instant.now
         }
-        return UInt64(uptimeDuration)
+
+        public static func now() -> Self {
+            DispatchTime()
+        }
+
+        public var uptimeNanoseconds: UInt64 {
+            let beginning = DispatchTime.uptimeBeginning
+            let uptimeDuration: Int64 = beginning.duration(to: self.instant).nanosecondsClamped
+            guard uptimeDuration >= 0 else {
+                assertionFailure("It shouldn't be possible to get a negative duration since uptimeBeginning.")
+                return 0
+            }
+            return UInt64(uptimeDuration)
+        }
     }
 }
 

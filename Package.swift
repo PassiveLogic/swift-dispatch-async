@@ -7,14 +7,18 @@ let package = Package(
     products: [
         .library(
             name: "DispatchAsync",
-            targets: ["DispatchAsync"])
+            targets: ["DispatchAsync"]
+        ),
     ],
     targets: [
         .target(
-            name: "DispatchAsync"),
+            name: "DispatchAsync",
+        ),
         .testTarget(
             name: "DispatchAsyncTests",
-            dependencies: ["DispatchAsync"]
+            dependencies: [
+                "DispatchAsync"
+            ],
         ),
     ]
 )

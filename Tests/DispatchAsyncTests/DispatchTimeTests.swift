@@ -14,8 +14,12 @@
 
 import Testing
 
-@testable import DispatchAsync
+@_spi(DispatchAsync) import DispatchAsync
 
+@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
+private typealias DispatchTime = DispatchAsync.DispatchTime
+
+@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 @Test
 func testDispatchTimeContinousClockBasics() async throws {
     let a = DispatchTime.now().uptimeNanoseconds

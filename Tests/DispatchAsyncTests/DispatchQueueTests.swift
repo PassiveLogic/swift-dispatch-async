@@ -14,7 +14,9 @@
 
 import Testing
 
-@testable import DispatchAsync
+@_spi(DispatchAsync) import DispatchAsync
+
+private typealias DispatchQueue = DispatchAsync.DispatchQueue
 
 #if !os(WASI)
 import class Foundation.Thread

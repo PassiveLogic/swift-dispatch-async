@@ -14,16 +14,16 @@
 
 /// Provides a semaphore implantation in `async` context, with a safe wait method. Provides easy safe replacement
 /// for DispatchSemaphore usage.
-@available(macOS 10.15, *)
-actor AsyncSemaphore {
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public actor AsyncSemaphore {
     private var value: Int
     private var waiters: [CheckedContinuation<Void, Never>] = []
 
-    init(value: Int = 1) {
+    public init(value: Int = 1) {
         self.value = value
     }
 
-    func wait() async {
+    public func wait() async {
         value -= 1
 
         if value >= 0 { return }
@@ -32,7 +32,7 @@ actor AsyncSemaphore {
         }
     }
 
-    func signal() {
+    public func signal() {
         self.value += 1
 
         guard !waiters.isEmpty else { return }
@@ -41,15 +41,15 @@ actor AsyncSemaphore {
     }
 }
 
-@available(macOS 10.15, *)
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension AsyncSemaphore {
-    func withLock<T: Sendable>(_ closure: () async throws -> T) async rethrows -> T {
+    public func withLock<T: Sendable>(_ closure: () async throws -> T) async rethrows -> T {
         await wait()
         defer { signal() }
         return try await closure()
     }
 
-    func withLockVoid(_ closure: () async throws -> Void) async rethrows {
+    public func withLockVoid(_ closure: () async throws -> Void) async rethrows {
         await wait()
         defer { signal() }
         try await closure()
