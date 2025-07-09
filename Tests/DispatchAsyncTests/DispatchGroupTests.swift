@@ -20,10 +20,12 @@ import class Foundation.Thread
 import Testing
 
 private typealias DispatchGroup = DispatchAsync.DispatchGroup
+private typealias DispatchQueue = DispatchAsync.DispatchQueue
 
 @Suite("DispatchGroup Tests")
 struct DispatchGroupTests {
     @Test(arguments: [1000])
+	@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 	func dispatchGroupOrderCleanliness(repetitions: Int) async throws {
     	// Repeating this `repetitions` number of times to help rule out
 	    // edge cases that only show up some of the time
@@ -133,6 +135,7 @@ struct DispatchGroupTests {
     /// math-heavy blocks on a global queue, then waiting for them to finish with a
     /// timeout.  It also verifies that `notify` is invoked exactly once.
     @Test(.timeLimit(.minutes(1)))
+    @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
     func dispatchGroupStress() async throws {
         let iterations = 1000
         // We use a separate concurrent queue rather than the global queue to avoid interference issues
