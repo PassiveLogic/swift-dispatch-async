@@ -12,9 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Testing
-
 @_spi(DispatchAsync) import DispatchAsync
+import Testing
 
 private typealias DispatchQueue = DispatchAsync.DispatchQueue
 

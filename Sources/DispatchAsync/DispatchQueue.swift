@@ -149,8 +149,7 @@ extension DispatchAsync {
 
         /// Enqueue a new unit of work.
         @discardableResult
-        nonisolated
-        func enqueue(_ workItem: @escaping WorkItem) -> AsyncStream<WorkItem>.Continuation.YieldResult {
+        nonisolated func enqueue(_ workItem: @escaping WorkItem) -> AsyncStream<WorkItem>.Continuation.YieldResult {
             // Never suspends, preserves order
             continuation.yield(workItem)
         }

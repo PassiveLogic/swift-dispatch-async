@@ -12,9 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Testing
-
 @_spi(DispatchAsync) import DispatchAsync
+import Testing
 
 @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 private typealias DispatchTime = DispatchAsync.DispatchTime

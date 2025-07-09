@@ -48,9 +48,10 @@ extension DispatchAsync {
     #endif
     @available(
         *,
-         deprecated,
-         renamed: "AsyncSemaphore",
-         message: "DispatchSemaphore.wait is dangerous because of it's thread-blocking nature. Use AsyncSemaphore and Swift Concurrency instead."
+        deprecated,
+        renamed: "AsyncSemaphore",
+        message:
+            "DispatchSemaphore.wait is dangerous because of it's thread-blocking nature. Use AsyncSemaphore and Swift Concurrency instead."
     )
     @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
     public class DispatchSemaphore: @unchecked Sendable {

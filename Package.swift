@@ -8,7 +8,7 @@ let package = Package(
         .library(
             name: "DispatchAsync",
             targets: ["DispatchAsync"]
-        ),
+        )
     ],
     targets: [
         .target(
