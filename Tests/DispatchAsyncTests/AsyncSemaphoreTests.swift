@@ -41,7 +41,7 @@ func asyncSemaphoreWaitSignal() async throws {
     // Allow the task a few cycles to reach the initial semaphore.wait()
     try? await Task.sleep(nanoseconds: 1_000)
 
-    #expect(!didEnterCriticalSection)  // should still be waiting
+    #expect(!didEnterCriticalSection) // should still be waiting
 
     // Now release the semaphore – the waiter should proceed
     await semaphore.signal()
@@ -52,7 +52,7 @@ func asyncSemaphoreWaitSignal() async throws {
     // will be false below
     await semaphore.wait()
 
-    #expect(didEnterCriticalSection)   // waiter must have run
+    #expect(didEnterCriticalSection) // waiter must have run
 }
 
 @Test func basicAsyncSemaphoreTest() async throws {
