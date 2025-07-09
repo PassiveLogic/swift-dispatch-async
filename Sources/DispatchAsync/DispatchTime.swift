@@ -70,7 +70,10 @@ extension DispatchAsync {
     }
 }
 
-// NOTE: The following was copied from swift-nio/Source/NIOCore/TimeAmount+Duration on June 27, 2025
+// NOTE: The following was copied from swift-nio/Source/NIOCore/TimeAmount+Duration on June 27, 2025.
+//
+// See https://github.com/apple/swift-nio/blob/83bc5b58440373a7678b56fa0d9cc22ca55297ee/Sources/NIOCore/TimeAmount%2BDuration.swift
+//
 // It was copied rather than brought via dependencies to avoid introducing
 // a dependency on swift-nio for such a small piece of code.
 //
