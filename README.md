@@ -133,3 +133,9 @@ DispatchQueue.main.async {
     // Run your code here…
 }
 ```
+
+# LICENSE
+
+This project is distributed by PassiveLogic under the Apache-2.0 license. See
+[LICENSE](https://github.com/PassiveLogic/dispatch-async/blob/main/LICENSE) for full terms of use.
+
