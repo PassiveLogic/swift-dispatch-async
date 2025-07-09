@@ -16,7 +16,7 @@ let package = Package(
             name: "DispatchAsyncTests",
             dependencies: [
                 "DispatchAsync"
-            ],
+            ]
         ),
     ]
 )
