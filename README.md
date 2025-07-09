@@ -23,6 +23,11 @@ into the toolchain only for wasm targets.
 
 Ideally, with either approach, this repository would transfer ownership to the swiftlang organization.
 
+In the interim, to move wasm support forward, portions of DispatchAsync may be inlined (copy-pasted)
+into various libraries to enable wasm support. DispatchAsync is designed for this purpose, and has
+special `#if` handling to ensure that existing temporary usages will be elided without breakage
+the moment SwiftWasm adds support for `Dispatch` into the toolchain.
+
 # DispatchSemaphore Limitations
 
 The current implementation of `DispatchSemaphore` has some limitations. Blocking threads goes against the design goals of Swift Concurrency.
@@ -37,4 +42,94 @@ be needed for multi-threaded execution. This makes the implementation much easie
 - For wasm targets, calls to `signal` and `wait` must be balanced. An assertion triggers if `wait` is called more times than `signal`.
 - DispatchSemaphore is deprecated for wasm targets, and AsyncSemaphore is encouraged as the replacement.
 - For non-wasm targets, DispatchSemaphore is simply a typealias for `AsyncSemaphore`, and provides only a non-blocking async `wait` 
-function. This reduces potential issues that can arise from wait being a thread-blocking function. 
+function. This reduces potential issues that can arise from wait being a thread-blocking function.
+
+# Usage
+
+If you've scrolled this far, you probably saw the warning. But just to make sure…
+
+> ⚠️ WARNING - This is an 🧪experimental🧪 repository and should not be adopted at large.
+
+PassiveLogic is [actively working](https://github.com/PassiveLogic/swift-web-examples/issues/1) to mainstream this into the SwiftWasm
+toolchain. But if you can't wait, here are some tips.
+
+## 1. Only use this for WASI platforms, and only if Dispatch cannot be imported.
+
+Use `#if os(WASI) && !canImport(Dispatch)` to elide usages outside of WASI platforms:
+
+```swift
+#if os(WASI) && !canImport(Dispatch)
+import DispatchAsync
+#else
+import Dispatch
+#endif
+
+// Use Dispatch API's the same way you normal would.
+```
+
+## 2. If you really want to use DispatchAsync as a pure swift Dispatch alternative for non-wasm targets
+
+Stop. Are you sure? If you do this, you'll need to be '
+
+1. Add the dependency to your package:
+
+```swift
+let package = Package(
+    name: "MyPackage",
+    products: [
+        // Products define the executables and libraries a package produces, making them visible to other packages.
+        .library(
+            name: "MyPackage",
+            targets: [
+                "MyPackage"
+            ]
+        ),
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/PassiveLogic/dispatch-async.git",
+            from: "0.0.1"
+        ),
+    ],
+    targets: [
+        .target(
+            name: "MyPackage"
+            dependencies: [
+                "DispatchAsync"
+            ]
+        ),
+    ]
+)
+```
+
+2. Import and use DispatchAsync in place of Dispatch like this:
+
+```swift
+#if os(WASI) && !canImport(Dispatch)
+import DispatchAsync
+#else
+// Non-WASI platforms have to explicitly bring in DispatchAsync
+// by using `@_spi`.
+@_spi(DispatchAsync) import DispatchAsync
+#endif
+
+// Not allowed:
+// import Dispatch
+
+// Also Not allowed:
+// import Foundation
+
+// You'll need to use scoped Foundation imports:
+import struct Foundation.URL // Ok. Doesn't bring in Dispatch
+
+// If you ignore the above notes, but do the following, be prepared for namespace
+// collisions between the toolchain's Dispatch and DispatchAsync:
+
+private typealias DispatchQueue = DispatchAsync.DispatchQueue
+
+// Ok. If you followed everything above, you can now do the following, using pure swift
+// under the hood! 🎉
+DispatchQueue.main.async {
+    // Run your code here…
+}
+```
