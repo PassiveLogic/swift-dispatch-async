@@ -2,6 +2,7 @@ import Testing
 
 @testable import DispatchAsync
 
+@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 @Test(.timeLimit(.minutes(1)))
 func asyncSemaphoreWaitSignal() async throws {
     let semaphore = AsyncSemaphore(value: 1)

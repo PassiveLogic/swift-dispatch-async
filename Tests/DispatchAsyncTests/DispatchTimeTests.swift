@@ -29,6 +29,7 @@ func testDispatchTimeContinousClockBasics() async throws {
     #expect(b < c)
 }
 
+@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 @Test
 func testUptimeNanosecondsEqualityForConsecutiveCalls() async throws {
     let original = DispatchTime.now()
