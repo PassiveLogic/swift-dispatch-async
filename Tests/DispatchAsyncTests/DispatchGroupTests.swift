@@ -13,11 +13,13 @@
 //===----------------------------------------------------------------------===//
 
 @_spi(DispatchAsync) import DispatchAsync
+import Testing
+
 import func Foundation.sin
+
 #if !os(WASI)
 import class Foundation.Thread
 #endif
-import Testing
 
 private typealias DispatchGroup = DispatchAsync.DispatchGroup
 private typealias DispatchQueue = DispatchAsync.DispatchQueue
@@ -143,7 +145,7 @@ struct DispatchGroupTests {
         let workQueue = DispatchQueue(attributes: .concurrent)
         let group = DispatchGroup()
 
-        let isolationQueue  = DispatchQueue(label: "isolationQueue")
+        let isolationQueue = DispatchQueue(label: "isolationQueue")
         nonisolated(unsafe) var counter = 0
 
         for _ in 0 ..< iterations {
@@ -195,5 +197,3 @@ struct DispatchGroupTests {
         #expect(finalCount == iterations)
     }
 }
-
-
