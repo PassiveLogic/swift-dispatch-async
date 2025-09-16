@@ -17,7 +17,7 @@
 // It is designed to safely elide away if and when Dispatch is introduced
 // in the required Dispatch support becomes available.
 #if os(WASI) && !canImport(Dispatch)
-/// Drop-in replacement for ``Dispatch.DispatchSemaphore``, implemented using pure swift.
+/// Drop-in replacement for ``Dispatch.DispatchSemaphore``, implemented using pure Swift.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 public typealias DispatchSemaphore = DispatchAsync.DispatchSemaphore
 #endif // os(WASI) && !canImport(Dispatch)

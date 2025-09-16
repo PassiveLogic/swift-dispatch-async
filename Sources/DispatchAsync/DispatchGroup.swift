@@ -17,7 +17,7 @@
 // It is designed to safely elide away if and when Dispatch is introduced
 // in the required Dispatch support becomes available.
 #if os(WASI) && !canImport(Dispatch)
-/// Drop-in replacement for ``Dispatch.DispatchGroup``, implemented using pure swift.
+/// Drop-in replacement for ``Dispatch.DispatchGroup``, implemented using pure Swift.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 public typealias DispatchGroup = DispatchAsync.DispatchGroup
 #endif
@@ -25,7 +25,7 @@ public typealias DispatchGroup = DispatchAsync.DispatchGroup
 extension DispatchAsync {
     // MARK: - Public Interface for Non-Async Usage -
 
-    /// Drop-in replacement for ``Dispatch.DispatchGroup``, implemented using pure swift.
+    /// Drop-in replacement for ``Dispatch.DispatchGroup``, implemented using pure Swift.
     ///
     /// The primary goal of this implementation is to enable WASM support for Dispatch.
     ///
