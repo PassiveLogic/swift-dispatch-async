@@ -67,7 +67,7 @@ import Dispatch
 // Use Dispatch API's the same way you normal would.
 ```
 
-## 2. If you really want to use DispatchAsync as a pure swift Dispatch alternative for non-wasm targets
+## 2. If you really want to use DispatchAsync as a pure Swift Dispatch alternative for non-wasm targets
 
 Stop. Are you sure? If you do this, you'll need to be '
 
@@ -127,7 +127,7 @@ import struct Foundation.URL // Ok. Doesn't bring in Dispatch
 
 private typealias DispatchQueue = DispatchAsync.DispatchQueue
 
-// Ok. If you followed everything above, you can now do the following, using pure swift
+// Ok. If you followed everything above, you can now do the following, using pure Swift
 // under the hood! 🎉
 DispatchQueue.main.async {
     // Run your code here…

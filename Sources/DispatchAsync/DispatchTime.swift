@@ -17,13 +17,13 @@
 // It is designed to safely elide away if and when Dispatch is introduced
 // in the required Dispatch support becomes available.
 #if os(WASI) && !canImport(Dispatch)
-/// Drop-in replacement for ``Dispatch.DispatchTime``, implemented using pure swift.
+/// Drop-in replacement for ``Dispatch.DispatchTime``, implemented using pure Swift.
 @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
 public typealias DispatchTime = DispatchAsync.DispatchTime
 #endif
 
 extension DispatchAsync {
-    /// Drop-in replacement for ``Dispatch.DispatchTime``, implemented using pure swift.
+    /// Drop-in replacement for ``Dispatch.DispatchTime``, implemented using pure Swift.
     #if !os(WASI)
     @_spi(DispatchAsync)
     #endif

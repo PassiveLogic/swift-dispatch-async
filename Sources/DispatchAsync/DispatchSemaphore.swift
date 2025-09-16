@@ -26,7 +26,7 @@ extension DispatchAsync {
     /// DispatchSemaphore is not safe to use for most wasm executables.
     ///
     /// This implementation assumes the single-threaded
-    /// environment that swift wasm executables typically run in.
+    /// environment that Swift for WebAssembly executables typically run in.
     ///
     /// It is not appropriate for true multi-threaded environments.
     ///
