@@ -17,11 +17,11 @@ import Testing
 
 private typealias DispatchGroup = DispatchAsync.DispatchGroup
 
-@Test
-func dispatchGroupOrderCleanliness() async throws {
-    // Repeating this 100 times to help rule out
+@Test(arguments: [100])
+func dispatchGroupOrderCleanliness(repetitions: Int) async throws {
+    // Repeating this `repetitions` number of times to help rule out
     // edge cases that only show up some of the time
-    for index in 0 ..< 100 {
+    for index in 0 ..< repetitions {
         Task {
             actor Result {
                 private(set) var value = ""
