@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-/// Provides a semaphore implantation in `async` context, with a safe wait method. Provides easy safe replacement
+/// Provides a semaphore implementation in `async` context, with a safe wait method. Provides easy safe replacement
 /// for DispatchSemaphore usage.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 public actor AsyncSemaphore {
