@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "dispatch-async",
+    name: "swift-dispatch-async",
     products: [
         .library(
             name: "DispatchAsync",

@@ -1,4 +1,4 @@
-# dispatch-async
+# swift-dispatch-async
 
 ## ⚠️ WARNING - This is an 🧪experimental🧪 repository and should not be adopted at large.
 
@@ -87,7 +87,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/PassiveLogic/dispatch-async.git",
+            url: "https://github.com/PassiveLogic/swift-dispatch-async.git",
             from: "0.0.1"
         ),
     ],
@@ -113,10 +113,10 @@ import DispatchAsync
 @_spi(DispatchAsync) import DispatchAsync
 #endif
 
-// Not allowed:
+// Not allowed, brings in Dispatch, aka "the real GCD":
 // import Dispatch
 
-// Also Not allowed:
+// Also not allowed, brings in Dispatch
 // import Foundation
 
 // You'll need to use scoped Foundation imports:
@@ -125,7 +125,7 @@ import struct Foundation.URL // Ok. Doesn't bring in Dispatch
 // If you ignore the above notes, but do the following, be prepared for namespace
 // collisions between the toolchain's Dispatch and DispatchAsync:
 
-private typealias DispatchQueue = DispatchAsync.DispatchQueue
+private typealias DispatchQueue = DispatchAsync.DispatchQueue // Ok as long as Dispatch isn't imported
 
 // Ok. If you followed everything above, you can now do the following, using pure Swift
 // under the hood! 🎉
@@ -137,5 +137,5 @@ DispatchQueue.main.async {
 # LICENSE
 
 This project is distributed by PassiveLogic under the Apache-2.0 license. See
-[LICENSE](https://github.com/PassiveLogic/dispatch-async/blob/main/LICENSE) for full terms of use.
+[LICENSE](https://github.com/PassiveLogic/swift-dispatch-async/blob/main/LICENSE) for full terms of use.
 
