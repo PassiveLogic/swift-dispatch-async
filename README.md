@@ -48,7 +48,7 @@ function. This reduces potential issues that can arise from wait being a thread-
 
 If you've scrolled this far, you probably saw the warning. But just to make sure…
 
-> ⚠️ WARNING - This is an 🧪experimental🧪 repository and should not be adopted at large.
+> ⚠️ WARNING - This is an 🧪experimental🧪 repository and should not be adopted at large at the present time.
 
 PassiveLogic is [actively working](https://github.com/PassiveLogic/swift-web-examples/issues/1) to mainstream this into the SwiftWasm
 toolchain. But if you can't wait, here are some tips.
@@ -69,7 +69,7 @@ import Dispatch
 
 ## 2. If you really want to use DispatchAsync as a pure Swift Dispatch alternative for non-wasm targets
 
-Stop. Are you sure? If you do this, you'll need to be '
+Stop. Are you sure? If you do this, you'll need to be careful with all `import Dispatch`, `import Foundation`, and many other issues.
 
 1. Add the dependency to your package:
 
@@ -77,7 +77,6 @@ Stop. Are you sure? If you do this, you'll need to be '
 let package = Package(
     name: "MyPackage",
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "MyPackage",
             targets: [
@@ -95,7 +94,7 @@ let package = Package(
         .target(
             name: "MyPackage"
             dependencies: [
-                "DispatchAsync"
+                .product(name: "DispatchAsync", package: "swift-dispatch-async", condition: .when(platforms: [.wasi])),
             ]
         ),
     ]

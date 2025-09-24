@@ -33,7 +33,7 @@ extension DispatchAsync {
     /// For safety, this class is only defined for WASI platforms.
     ///
     /// Most wasm executables are single-threaded. Calling DispatchSemaphore.wait
-    /// when it's value is 0 or lower would be likely cause a frozen main thread,
+    /// when its value is 0 or lower would be likely cause a frozen main thread,
     /// because that would block the calling thread. And there is usually
     /// only one thread in the wasm world (right now).
     ///

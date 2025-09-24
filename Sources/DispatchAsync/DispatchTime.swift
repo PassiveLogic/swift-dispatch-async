@@ -46,7 +46,7 @@ extension DispatchAsync {
         private static let uptimeBeginning: ContinuousClock.Instant = ContinuousClock.Instant.now
 
         /// See documentation for ``uptimeBeginning``. We intentionally
-        /// use this to guarantee a capture of `now` to uptimeBeginnin BEFORE
+        /// use this to guarantee a capture of `now` to `uptimeBeginning` BEFORE
         /// any DispatchTime instances are initialized.
         private let durationSinceUptime = uptimeBeginning.duration(to: ContinuousClock.Instant.now)
 

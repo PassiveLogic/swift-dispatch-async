@@ -29,8 +29,7 @@ extension DispatchAsync {
     ///
     /// The primary goal of this implementation is to enable WASM support for Dispatch.
     ///
-    /// Refer to documentation for the original [DispatchGroup](https://developer.apple.com/documentation/dispatch/dispatchgroup)
-    /// for more details,
+    /// For more details, refer to the original [DispatchGroup](https://developer.apple.com/documentation/dispatch/dispatchgroup)
     #if !os(WASI)
     @_spi(DispatchAsync)
     #endif
