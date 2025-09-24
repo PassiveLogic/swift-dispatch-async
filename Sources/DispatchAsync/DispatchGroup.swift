@@ -69,7 +69,7 @@ extension DispatchAsync {
             }
         }
 
-        func wait() async {
+        public func wait() async {
             await withCheckedContinuation { continuation in
                 queue.enqueue { [weak self] in
                     guard let self else { return }
