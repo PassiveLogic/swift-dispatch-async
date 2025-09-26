@@ -1,0 +1,43 @@
+name: Pull request
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  soundness:
+    name: Soundness
+    uses: swiftlang/github-workflows/.github/workflows/soundness.yml@main
+    with:
+      format_check_container_image: swift:6.1.0-noble
+      license_header_check_enabled: false
+      api_breakage_check_enabled: false
+
+  tests:
+    name: tests
+    uses: swiftlang/github-workflows/.github/workflows/swift_package_test.yml@main
+    with:
+      enable_macos_checks: false
+      linux_exclude_swift_versions: "[{\"swift_version\": \"5.9\"}, {\"swift_version\": \"5.10\"}, {\"swift_version\": \"5.10.1\"}, {\"swift_version\": \"6.0\"}]"
+      enable_windows_checks: false
+
+  wasm-sdk:
+    name: WebAssembly SDK
+    runs-on: ubuntu-latest
+    container:
+      image: "swift:6.1.0-noble"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: WasmBuild
+        # TODO: Update this to use swift-nio once https://github.com/apple/swift-nio/pull/3159/ is merged
+        run: |
+          apt-get update -y -q
+          apt-get install -y -q curl
+          apt-get install -y -q jq
+          version="$(swift --version | head -n1)"
+          tag="$(curl -sL "https://raw.githubusercontent.com/swiftwasm/swift-sdk-index/refs/heads/main/v1/tag-by-version.json" | jq -e -r --arg v "$version" '.[$v] | .[-1]')"
+          curl -sL "https://raw.githubusercontent.com/swiftwasm/swift-sdk-index/refs/heads/main/v1/builds/$tag.json" | jq -r '.["swift-sdks"]["wasm32-unknown-wasi"] | "swift sdk install \"\(.url)\" --checksum \"\(.checksum)\""' | sh -x
+          swift build --swift-sdk wasm32-unknown-wasi

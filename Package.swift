@@ -1,0 +1,22 @@
+// swift-tools-version: 6.0
+
+import PackageDescription
+
+let package = Package(
+    name: "swift-dispatch-async",
+    products: [
+        .library(
+            name: "DispatchAsync",
+            targets: ["DispatchAsync"]
+        )
+    ],
+    targets: [
+        .target(name: "DispatchAsync"),
+        .testTarget(
+            name: "DispatchAsyncTests",
+            dependencies: [
+                "DispatchAsync"
+            ]
+        ),
+    ]
+)
