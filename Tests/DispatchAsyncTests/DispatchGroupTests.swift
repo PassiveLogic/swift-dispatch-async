@@ -44,7 +44,7 @@ struct DispatchGroupTests {
                 let result = Result()
 
                 let group = DispatchGroup()
-                await result.append(value: "|🔵\(iteration)")
+                await result.append(value: "|🔵\(index)")
 
                 group.enter()
                 Task {
@@ -67,7 +67,7 @@ struct DispatchGroupTests {
                 await withCheckedContinuation { continuation in
                     group.notify(queue: .main) {
                         Task {
-                            await result.append(value: "🟢\(iteration)=")
+                            await result.append(value: "🟢\(index)=")
                             continuation.resume()
                         }
                     }
@@ -115,7 +115,7 @@ struct DispatchGroupTests {
                 /// ```
                 ///
                 /// ```
-                /// // BAD! (green globe comes before a purle one)
+                /// // BAD! (green globe comes before a purple one)
                 /// |🔵42🟣/🟣^🟢42🟣\=
                 /// ```
                 ///
