@@ -17,7 +17,7 @@ import Testing
 
 private typealias DispatchQueue = DispatchAsync.DispatchQueue
 
-/// Ping-Pong queue test  is adapted from the test
+/// Ping-Pong queue test is adapted from the test
 /// [dispatch_pingpong.c in libdispatch](https://github.com/swiftlang/swift-corelibs-libdispatch/blob/main/tests/dispatch_pingpong.c).
 ///
 /// Two queues recursively schedule work on each other N times. The test

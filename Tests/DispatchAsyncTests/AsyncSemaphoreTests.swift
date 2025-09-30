@@ -18,7 +18,7 @@ import Testing
 
 nonisolated(unsafe) private var sharedPoolCompletionCount = 0
 
-@Suite("DispatchGroup Tests")
+@Suite("AsyncSemaphore Tests")
 class AsyncSemaphoreTests {
     @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
     @Test(.timeLimit(.minutes(1)))
