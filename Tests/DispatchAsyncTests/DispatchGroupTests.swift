@@ -27,11 +27,11 @@ private typealias DispatchQueue = DispatchAsync.DispatchQueue
 @Suite("DispatchGroup Tests")
 struct DispatchGroupTests {
     @Test(arguments: [1000])
-	@available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
-	func dispatchGroupOrderCleanliness(repetitions: Int) async throws {
-    	// Repeating this `repetitions` number of times to help rule out
-	    // edge cases that only show up some of the time
-    	for index in 0 ..< repetitions {
+    @available(macOS 13, iOS 16, tvOS 16, watchOS 9, *)
+    func dispatchGroupOrderCleanliness(repetitions: Int) async throws {
+        // Repeating this `repetitions` number of times to help rule out
+        // edge cases that only show up some of the time
+        for index in 0 ..< repetitions {
             Task {
                 actor Result {
                     private(set) var value = ""
@@ -44,7 +44,7 @@ struct DispatchGroupTests {
                 let result = Result()
 
                 let group = DispatchGroup()
-                await result.append(value: "|🔵\(iteration)")
+                await result.append(value: "|🔵\(index)")
 
                 group.enter()
                 Task {
@@ -67,7 +67,7 @@ struct DispatchGroupTests {
                 await withCheckedContinuation { continuation in
                     group.notify(queue: .main) {
                         Task {
-                            await result.append(value: "🟢\(iteration)=")
+                            await result.append(value: "🟢\(index)=")
                             continuation.resume()
                         }
                     }
@@ -115,7 +115,7 @@ struct DispatchGroupTests {
                 /// ```
                 ///
                 /// ```
-                /// // BAD! (green globe comes before a purle one)
+                /// // BAD! (green globe comes before a purple one)
                 /// |🔵42🟣/🟣^🟢42🟣\=
                 /// ```
                 ///
