@@ -18,8 +18,6 @@
 ///
 /// Platforms other than WASI shouldn't consume this library for now
 /// except for testing and development purposes.
-///
-/// TODO: SM: Add github permalink to this, after it is merged.
 #if !os(WASI)
 @_spi(DispatchAsync)
 #endif
